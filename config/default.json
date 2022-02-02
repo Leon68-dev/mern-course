@@ -1,0 +1,12 @@
+{
+    "port": 5000,
+    "mssql": {
+        "user": "SA",
+        "password": "`12345",
+        "server": "localhost,1433", 
+        "database": "mern-course",
+        "encrypt": "false"
+    },
+    "jwtSecret": "deep purple my favoryte groupe"
+
+}
