@@ -1,10 +1,13 @@
-import 'materialize-css'
+import React from 'react';
+import 'materialize-css';
+import { useRoutes } from  './routes'
 
 function App() {
+  const routes = useRoutes(true);
   return (
-    <div className="container">
-      <h1>HELLO</h1>
-    </div>
+      <div className="container">
+        {routes}
+      </div>
   );
 }
 
