@@ -64,7 +64,7 @@ router.post(
 router.post(
     '/login', 
     [
-        check('email', 'Ошибка email').normalizeEmail().isEmail(),
+        check('email', 'Ошибка email').isEmail(),
         check('password', 'Введите пароль').exists()
     ],
     async (req, res) => {
@@ -83,7 +83,7 @@ router.post(
         let pool = await sql.connect(config.get('mssql'));
         let result_check = await pool.request()
             .input('input_email', sql.NVarChar, email)
-            .query('select * from dbo.Users where email = @input_email')
+            .query('select * from dbo.Users where email = @input_email');
         
         const user = result_check['recordset'][0];
         if(!user){
