@@ -9,26 +9,22 @@ import { DetailPage } from './pages/DetailPage';
 import { AuthPage } from './pages/AuthPage';
 
 export const useRoutes = isAuthentificated => {
+    console.log('isAuthentificated', isAuthentificated);
     if(isAuthentificated){
         return (
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/' element={<AuthPage />} exact />
-                    <Route path='/links' element={<LinksPage />} exact />
-                    <Route path='/create' element={<CreatePage />} exact />
-                    <Route path='/detail/id:' element={<DetailPage />} />
-                    {/* Redirect */}
-                </Routes>
-            </BrowserRouter>
+            <Routes>
+                <Route path='/links' element={<LinksPage />} exact />
+                <Route path='/create' element={<CreatePage />} exact />
+                <Route path='/detail/id:' element={<DetailPage />} />
+                <Route path='/' element={<CreatePage />} exact />
+            </Routes>
         );
     }
 
     return (
-        <BrowserRouter>
             <Routes>
                 <Route path='/' element={<AuthPage />} exact />
             </Routes>
-        </BrowserRouter>
     );
     
 }
