@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const {check, validationResult} = require('express-validator')
 const router = Router();
-const config = require('config')
-const sql = require('mssql')
+const config = require('config');
+const sql = require('mssql');
 
 // /api/auth/register
 router.post(
@@ -50,7 +50,7 @@ router.post(
                 transaction.commit(err => {
                     // ... error checks
                     res.status(201).json({ message: 'Пользователа создан' });
-                    console.log("Transaction committed.")
+                    console.log("Transaction committed.");
                 });
             });
         });

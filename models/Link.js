@@ -5,7 +5,7 @@ class Link{
         this.To_ = "";
         this.Code = "";
         this.Click = 0;
-        this.Owner = "";
+        this.OwnerId = 0;
         this.DateCreated = new Date();
     }
 }

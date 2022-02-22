@@ -23,7 +23,8 @@
     "jsonwebtoken": "^8.5.1",
     "materialize-css": "^1.0.0-rc.2",
     "mongoose": "^6.1.9",
-    "mssql": "^8.0.1"
+    "mssql": "^8.0.1",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "concurrently": "^7.0.0",
