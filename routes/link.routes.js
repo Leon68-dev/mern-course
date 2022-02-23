@@ -1,35 +1,28 @@
 const {Router} = require('express');
 const config = require('config');
 const shortid = require('shortid');
-const Link = require('../models/Link');
 const auth = require('../middleware/auth.middleware');
 const router = Router();
 const sql = require('mssql');
+const { v4: uuidv4 } = require('uuid');
 
 router.post('/generate', auth, async (req, res) => {
   try {
     const baseUrl = config.get('baseUrl');
     const {from} = req.body;
 
-    const code = shortid.generate();
-
-    //const existing = await Link.findOne({ from });
     let pool = await sql.connect(config.get('mssql'));
     let existing = await pool.request()
         .input('from', sql.NVarChar, from)
-        .query('SELECT ID, From_, To_, Code, Click, OwnerId, DateCreated FROM dbo.Links where From_ = @from');
+        .query('SELECT * FROM dbo.Links where From_ = @from');
 
     if (existing['recordset'][0]) {
-      return res.json({ link: existing });
+      return res.json({ link: existing['recordset'][0] });
     }
-
+    
+    const code = shortid.generate();
     const to = baseUrl + '/t/' + code;
-
-    const link = new Link({
-       code, to, from, owner: req.user.userId
-    })
-
-    //await link.save();
+    const uuid = uuidv4();
 
     const transaction = new sql.Transaction(pool);
     transaction.begin(err => {
@@ -38,19 +31,28 @@ router.post('/generate', auth, async (req, res) => {
             .input('input_code', sql.NVarChar, code)
             .input('input_to', sql.NVarChar, to)
             .input('input_from', sql.NVarChar, from)
-            .input('input_owner_id', sql.Int, code);
+            .input('input_owner_id', sql.Int, req.user.userId)
+            .input('input_uuid', sql.NVarChar, uuid);
 
-        request.query('insert into Links (From_, To_, Code, OwnerId) values (@input_from, @input_to, @input_code, @input_owner_id)', (err, result) => {
+        request.query('insert into Links (From_, To_, Code, OwnerId, UUID) values (@input_from, @input_to, @input_code, @input_owner_id, @input_uuid)', (err, result) => {
             // ... error checks
             transaction.commit(err => {
                 // ... error checks
-                res.status(201).json({ message: 'Link добавлен' });
+                res.status(201).json({ 
+                  link: {
+                    ID: 0,
+                    From_: from,
+                    To_ : to,
+                    Code : code,
+                    Click: 0,
+                    OwnerId: req.user.userId,
+                    UUID: uuid
+                  }
+                });
                 console.log("Transaction committed.");
             });
         });
     });
-
-    res.status(201).json({ link });
   } catch (e) {
     res.status(500).json({ message: 'Что-то пошло не так, попробуйте снова' });
   }

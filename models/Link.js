@@ -7,6 +7,7 @@ class Link{
         this.Click = 0;
         this.OwnerId = 0;
         this.DateCreated = new Date();
+        this.UUID = "";
     }
 }
 
